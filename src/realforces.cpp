@@ -28,10 +28,15 @@ void compute_force_real_dof(vector<PARTICLE> &ion, INTERFACE &box, char flag) {
     vector<VERTEX> L = box.leftplane;
     vector<VERTEX> R = box.rightplane;
 
-
-    //cout << L.size() << endl;
-    //cout << R.size() << endl;
-    //cout << ion.size() << endl;
+//    cout <<"L.size()" << L.size() << endl;
+//    cout <<"R.size()" << R.size() << endl;
+//    cout <<"ion.size()" << ion.size() << endl;
+//    cout <<"sizFVecMesh" << sizFVecMesh << endl;
+//    cout <<"sizFVecIons" << sizFVecIons << endl;
+//    cout <<"lowerBoundMesh" << lowerBoundMesh << endl;
+//    cout <<"upperBoundMesh" << upperBoundMesh << endl;
+//    cout <<"lowerBoundIons" << lowerBoundIons << endl;
+//    cout <<"upperBoundIons" << upperBoundIons << endl;
 
     unsigned int i, j, k, l;
     int factor;
@@ -155,7 +160,6 @@ void compute_force_real_dof(vector<PARTICLE> &ion, INTERFACE &box, char flag) {
             inner_lw4Gather[k] = inner_lw4[k - lowerBoundMesh];
         }
     }
-
 
 #pragma omp for schedule(dynamic) private(k, i, l, vec, dz, r_1, r_2, gcsh_z, gcsh_inf, \
      left_gw1q, left_gw1q_1_gw1w1, left_gw1q_2_gw1w2, \
@@ -617,7 +621,7 @@ void compute_force_real_dof(vector<PARTICLE> &ion, INTERFACE &box, char flag) {
         all_gather(world, &forceVec[0], forceVec.size(), forceVecGather);
 
     } else {
-        for (k = lowerBoundMesh; k <= upperBoundMesh; k++) {
+        for (k = lowerBoundIons; k <= upperBoundIons; k++) {
             forceVecGather[k] = forceVec[k - lowerBoundMesh];
         }
     }
@@ -628,6 +632,7 @@ void compute_force_real_dof(vector<PARTICLE> &ion, INTERFACE &box, char flag) {
 
     forceVec.clear();
     forceVecGather.clear();
+
 
     // force on the fake degrees of freedom
     for (unsigned int k = 0; k < L.size(); k++)
