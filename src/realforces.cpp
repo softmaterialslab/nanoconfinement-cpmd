@@ -105,7 +105,7 @@ void compute_force_real_dof(vector<PARTICLE> &ion, INTERFACE &box, char flag) {
     vector<VECTOR3D> forceVec(sizFVecIons, 0.0);
     vector<VECTOR3D> forceVecGather(ion.size(), 0.0);
 
-#pragma omp for schedule(dynamic) private(k, i, insum1, insum2, vec)
+#pragma omp parallel for schedule(dynamic) private(k, i, insum1, insum2, vec)
     for (k = lowerBoundMesh; k <= upperBoundMesh; k++) {
         insum1 = 0;
         insum2 = 0;
@@ -122,7 +122,7 @@ void compute_force_real_dof(vector<PARTICLE> &ion, INTERFACE &box, char flag) {
         inner_lw3[k - lowerBoundMesh] = insum2;        //gqEw1_1				inner_lw1=inner_rw1
     }
 
-#pragma omp for schedule(dynamic) private(k, i, insum1, insum2, vec)
+#pragma omp parallel for schedule(dynamic) private(k, i, insum1, insum2, vec)
     for (k = lowerBoundMesh; k <= upperBoundMesh; k++) {
         insum1 = 0;
         insum2 = 0;
@@ -161,7 +161,7 @@ void compute_force_real_dof(vector<PARTICLE> &ion, INTERFACE &box, char flag) {
         }
     }
 
-#pragma omp for schedule(dynamic) private(k, i, l, vec, dz, r_1, r_2, gcsh_z, gcsh_inf, \
+#pragma omp parallel for schedule(dynamic) private(k, i, l, vec, dz, r_1, r_2, gcsh_z, gcsh_inf, \
      left_gw1q, left_gw1q_1_gw1w1, left_gw1q_2_gw1w2, \
   innersum_1, innersum_2, innersum_3, innersum_4)
     for (k = lowerBoundMesh; k <= upperBoundMesh; k++) {
@@ -234,7 +234,7 @@ void compute_force_real_dof(vector<PARTICLE> &ion, INTERFACE &box, char flag) {
     }
 
 
-#pragma omp for schedule(dynamic) private(k, i, l, vec, dz, r_1, r_2, gcsh_z, gcsh_inf, \
+#pragma omp parallel for schedule(dynamic) private(k, i, l, vec, dz, r_1, r_2, gcsh_z, gcsh_inf, \
   right_gw2q, right_gw2q_1_gw2w1, right_gw2q_2_gw2w2, \
   innersum_1, innersum_2, innersum_3, innersum_4)
     for (k = lowerBoundMesh; k <= upperBoundMesh; k++) {
@@ -349,7 +349,7 @@ void compute_force_real_dof(vector<PARTICLE> &ion, INTERFACE &box, char flag) {
     fwRDist.clear();
     fwRDistGather.clear();
 
-#pragma omp for schedule(dynamic) private(k, j, i, vec, dz, r_1, r_2, factor, hcsh, E_z, \
+#pragma omp parallel for schedule(dynamic) private(k, j, i, vec, dz, r_1, r_2, factor, hcsh, E_z, \
   grad_G, grad_ndot_G, \
   hqq_ij, hqq_1_ij, hqq_2_ij, hqq_11_ij, hqq_22_ij, hqq_12_ij, \
   hqw1, hqEw1_1, hw1Eq_1, hqw2, hqEw2_2, hw2Eq_2, dummy)
@@ -482,7 +482,7 @@ void compute_force_real_dof(vector<PARTICLE> &ion, INTERFACE &box, char flag) {
 
     // excluded volume interactions given by purely repulsive LJ
     // ion-ion
-#pragma omp for schedule(dynamic) private(k, j, i, vec, r_1, \
+#pragma omp parallel for schedule(dynamic) private(k, j, i, vec, r_1, \
   fljcc, flj, dummy, wall_dummy)
     for (i = lowerBoundIons; i <= upperBoundIons; i++) {
         fljcc = VECTOR3D(0, 0, 0);
